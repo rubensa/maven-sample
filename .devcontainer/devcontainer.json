@@ -1,0 +1,36 @@
+{
+  "name": "maven-sample",
+  "dockerFile": "Dockerfile",
+  // Connect as an existing non-root user in the container.
+  // On Linux, by default, the container user's UID/GID will be updated to match your local user.
+  "remoteUser": "user",
+  // Install Java
+  "postCreateCommand": [
+    "/bin/bash",
+    "-i",
+    "-c",
+    "export JAVA_VERSION=11.0; export JAVA_INSTALL_VERSION=$(sdk list java | grep -o \"${JAVA_VERSION}\\.[0-9\\.]*hs-adpt\" | head -1); sdk install java $JAVA_INSTALL_VERSION || true; ln -s /opt/sdkman/candidates/java/$JAVA_INSTALL_VERSION /opt/sdkman/candidates/java/$JAVA_VERSION;"
+  ],
+  "extensions": [
+    // Java Support
+    "vscjava.vscode-java-pack"
+  ],
+  "settings": {
+    "maven.terminal.useJavaHome": true,
+    "maven.executable.preferMavenWrapper": true,
+    // Configure Java
+    "java.configuration.runtimes": [
+      {
+        "name": "JavaSE-11",
+        "path": "/opt/sdkman/candidates/java/11.0",
+      }
+    ],
+    "java.home": "/opt/sdkman/candidates/java/11.0",
+    // Ensure VS Code uses the right one for terminals and tasks.
+    "terminal.integrated.shell.linux": "/bin/bash",
+    // Run interactive bash shell in VSCode integrated terminal
+    "terminal.integrated.shellArgs.linux": [
+      "-i"
+    ]
+  }
+}
